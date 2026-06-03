@@ -1,0 +1,29 @@
+{
+  "agent": "DevOps Engineer",
+  "version": "1.0.0",
+  "id": "agent.devops.v1",
+  "invocation": {
+    "schema": "pipeline-design",
+    "trigger": ["project-init", "pipeline-change", "pre-release", "performance-regression"],
+    "required_context": ["build-config", "test-config", "github-pages-config"]
+  },
+  "inputs": [
+    { "name": "build-requirements", "type": "markdown", "description": "Build and bundle requirements" },
+    { "name": "test-config", "type": "json", "description": "Test job requirements" },
+    { "name": "deployment-target", "type": "string", "description": "GitHub Pages (default)" },
+    { "name": "performance-budgets", "type": "json", "description": "Bundle size and load time targets" }
+  ],
+  "outputs": [
+    { "name": "ci-workflow", "type": "yaml", "description": "GitHub Actions CI definition" },
+    { "name": "cd-workflow", "type": "yaml", "description": "GitHub Actions CD definition" },
+    { "name": "build-config", "type": "ts", "description": "Vite build configuration" },
+    { "name": "release-workflow", "type": "yaml", "description": "Release automation" },
+    { "name": "env-config", "type": "json", "description": "Environment configuration" }
+  ],
+  "validation_rules": [
+    "Pipeline must complete within 10 minutes",
+    "Deployment must be zero-downtime (GitHub Pages swap)",
+    "All environment secrets must be securely managed",
+    "Build must produce verified and validated artifacts"
+  ]
+}

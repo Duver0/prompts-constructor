@@ -1,0 +1,34 @@
+{
+  "agent": "Testing Architect",
+  "version": "1.0.0",
+  "id": "agent.testing-architect.v1",
+  "invocation": {
+    "schema": "test-design",
+    "trigger": ["new-feature-tests", "quality-gate-failure", "coverage-gap", "pre-release"],
+    "required_context": ["user-stories", "domain-model", "component-hierarchy", "source-code"]
+  },
+  "inputs": [
+    { "name": "user-stories", "type": "story[]", "description": "For acceptance test derivation" },
+    { "name": "domain-model", "type": "artifact", "description": "For unit test targets" },
+    { "name": "component-hierarchy", "type": "markdown", "description": "For component test targets" },
+    { "name": "source-code", "type": "tsx[]", "description": "Implementation under test" },
+    { "name": "store-slices", "type": "ts[]", "description": "State management under test" }
+  ],
+  "outputs": [
+    { "name": "test-strategy", "type": "markdown", "description": "Overall testing approach" },
+    { "name": "vitest-config", "type": "ts", "description": "Test runner configuration" },
+    { "name": "unit-tests", "type": "ts[]", "description": "Domain and utility tests" },
+    { "name": "component-tests", "type": "tsx[]", "description": "RTL component tests" },
+    { "name": "integration-tests", "type": "tsx[]", "description": "Feature workflow tests" },
+    { "name": "e2e-tests", "type": "ts[]", "description": "Playwright test scenarios" },
+    { "name": "quality-gates", "type": "json", "description": "Pass/fail threshold definitions" }
+  ],
+  "validation_rules": [
+    "Unit test coverage >= 80%",
+    "Integration test coverage >= 70%",
+    "E2E tests cover all critical user journeys",
+    "Component tests cover all states (loading, empty, error, edge cases)",
+    "No flaky tests permitted",
+    "Accessibility tests must be included in component test suite"
+  ]
+}

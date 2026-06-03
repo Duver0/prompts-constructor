@@ -1,0 +1,29 @@
+{
+  "agent": "Documentation Agent",
+  "version": "1.0.0",
+  "id": "agent.documentation.v1",
+  "invocation": {
+    "schema": "documentation-generation",
+    "trigger": ["architectural-decision", "feature-completion", "pre-release", "onboarding-update"],
+    "required_context": ["architecture", "source-code", "workflows"]
+  },
+  "inputs": [
+    { "name": "architectural-decisions", "type": "markdown[]", "description": "ADRs to formalize" },
+    { "name": "source-code", "type": "file[]", "description": "For extracting API and component docs" },
+    { "name": "agent-contracts", "type": "json[]", "description": "Agent specifications to document" },
+    { "name": "release-notes", "type": "text", "description": "Changes and features for release" }
+  ],
+  "outputs": [
+    { "name": "adrs", "type": "md[]", "description": "Architecture Decision Records" },
+    { "name": "architecture-docs", "type": "md[]", "description": "System, container, component docs" },
+    { "name": "diagrams", "type": "mermaid[]", "description": "C4 model diagrams" },
+    { "name": "onboarding-guide", "type": "md", "description": "Developer setup and workflow guide" },
+    { "name": "changelog", "type": "md", "description": "Release changelog" }
+  ],
+  "validation_rules": [
+    "Every significant decision must have an ADR",
+    "Documentation must reflect current codebase state",
+    "Architecture diagrams must use C4 model with Mermaid",
+    "Onboarding guide must be reproducible by a new developer"
+  ]
+}

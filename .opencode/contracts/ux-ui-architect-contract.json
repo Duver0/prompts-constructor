@@ -1,0 +1,28 @@
+{
+  "agent": "UX/UI Architect",
+  "version": "1.0.0",
+  "id": "agent.ux-ui-architect.v1",
+  "invocation": {
+    "schema": "design-spec",
+    "trigger": ["new-feature-design", "component-hierarchy", "accessibility-audit", "animation-spec"],
+    "required_context": ["user-stories", "domain-model", "frontend-constraints"]
+  },
+  "inputs": [
+    { "name": "user-stories", "type": "story[]", "description": "User stories with acceptance criteria" },
+    { "name": "domain-model", "type": "artifact", "description": "Domain entities and value objects" },
+    { "name": "brand-guidelines", "type": "markdown", "description": "Design language references" }
+  ],
+  "outputs": [
+    { "name": "user-flows", "type": "mermaid", "description": "User flow diagrams" },
+    { "name": "component-hierarchy", "type": "markdown", "description": "Component tree and composition" },
+    { "name": "design-tokens", "type": "json", "description": "TailwindCSS-compatible design tokens" },
+    { "name": "animation-specs", "type": "markdown", "description": "Anime.js animation specifications" },
+    { "name": "accessibility-specs", "type": "markdown", "description": "WCAG 2.1 AA compliance specifications" }
+  ],
+  "validation_rules": [
+    "All components must have accessibility specifications",
+    "Design tokens must be representable in TailwindCSS config",
+    "User flows must cover happy path and all error states",
+    "Animation specs must specify timing functions, duration, and stagger values"
+  ]
+}

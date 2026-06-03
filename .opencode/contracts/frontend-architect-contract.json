@@ -1,0 +1,32 @@
+{
+  "agent": "Frontend Architect",
+  "version": "1.0.0",
+  "id": "agent.frontend-architect.v1",
+  "invocation": {
+    "schema": "implementation",
+    "trigger": ["feature-implementation", "architecture-refactor", "store-design", "component-implementation"],
+    "required_context": ["component-hierarchy", "domain-model", "design-tokens", "animation-specs"]
+  },
+  "inputs": [
+    { "name": "component-hierarchy", "type": "markdown", "description": "Component tree from UX Architect" },
+    { "name": "domain-model", "type": "artifact", "description": "Domain entities and rules" },
+    { "name": "design-tokens", "type": "json", "description": "Theme and style values" },
+    { "name": "animation-specs", "type": "markdown", "description": "Anime.js specs" },
+    { "name": "user-stories", "type": "story[]", "description": "For implementing correct behavior" }
+  ],
+  "outputs": [
+    { "name": "source-code", "type": "tsx[]", "description": "React component implementations" },
+    { "name": "store-slices", "type": "ts[]", "description": "Zustand store definitions" },
+    { "name": "route-config", "type": "tsx", "description": "React Router tree" },
+    { "name": "hooks", "type": "ts[]", "description": "Custom React hooks" },
+    { "name": "types", "type": "ts[]", "description": "TypeScript type definitions" },
+    { "name": "tests", "type": "ts[]", "description": "Component and unit tests" }
+  ],
+  "validation_rules": [
+    "All components must implement UX/UI Architect specs exactly",
+    "Stores must follow sliced single-responsibility pattern",
+    "No cross-feature imports between independent feature modules",
+    "All animations must be encapsulated in Anime.js hooks",
+    "TypeScript strict mode must be satisfied"
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "agent": "Code Reviewer",
+  "version": "1.0.0",
+  "id": "agent.code-reviewer.v1",
+  "invocation": {
+    "schema": "review",
+    "trigger": ["pre-merge", "feature-complete", "refactor-complete", "security-audit"],
+    "required_context": ["source-code", "tests", "standards", "architecture-docs"]
+  },
+  "inputs": [
+    { "name": "source-code", "type": "file[]", "description": "Code to review" },
+    { "name": "test-files", "type": "file[]", "description": "Tests to validate" },
+    { "name": "standards", "type": "md[]", "description": "Coding and architecture standards" },
+    { "name": "previous-reports", "type": "md[]", "description": "For regression checking" }
+  ],
+  "outputs": [
+    { "name": "review-report", "type": "md", "description": "Per-file findings with severity" },
+    { "name": "compliance-score", "type": "json", "description": "Score per principle (SOLID, security, etc.)" },
+    { "name": "quality-verdict", "type": "enum", "description": "pass | fail | conditional-pass" },
+    { "name": "blocking-issues", "type": "issue[]", "description": "Must-fix items before merge" }
+  ],
+  "validation_rules": [
+    "Zero blocker or critical severity issues for pass verdict",
+    "SOLID principles must be respected in all layers",
+    "Clean Architecture layer boundaries must not be violated",
+    "TypeScript strict mode compliance mandatory",
+    "No known security vulnerabilities"
+  ]
+}

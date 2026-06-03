@@ -1,0 +1,47 @@
+{
+  "agent": "Prompt Engineer",
+  "version": "1.0.0",
+  "id": "agent.prompt-engineer.v1",
+  "invocation": {
+    "schema": "domain-specification",
+    "trigger": [
+      "new-prompt-feature",
+      "new-prompt-block",
+      "new-export-format",
+      "validation-rule-change",
+      "template-system-change",
+      "provider-expansion",
+      "quality-standard-review"
+    ],
+    "required_context": [
+      "user-stories",
+      "provider-specifications",
+      "existing-prompt-structures",
+      "export-requirements"
+    ]
+  },
+  "inputs": [
+    { "name": "user-stories", "type": "story[]", "description": "User stories with acceptance criteria for prompt features" },
+    { "name": "provider-specs", "type": "markdown", "description": "AI provider API specifications and formatting docs" },
+    { "name": "feature-requests", "type": "text", "description": "New feature requirements for prompt capabilities" },
+    { "name": "existing-templates", "type": "markdown", "description": "Current prompt template definitions (if evolving)" },
+    { "name": "block-definitions", "type": "markdown", "description": "Existing block type definitions (if modifying)" }
+  ],
+  "outputs": [
+    { "name": "prompt-domain-spec", "type": "markdown", "description": "Block hierarchy, composition rules, ordering, structure spec" },
+    { "name": "validation-rules", "type": "markdown", "description": "Structural, semantic, and variable validation rule definitions" },
+    { "name": "export-specs", "type": "markdown", "description": "Per-provider format maps and transformation spec" },
+    { "name": "template-definitions", "type": "markdown", "description": "Category catalog, block requirements, structure specs" },
+    { "name": "quality-standards", "type": "markdown", "description": "Evaluation methodology, scoring criteria, optimization catalog" },
+    { "name": "variable-system-spec", "type": "markdown", "description": "Syntax, validation, replacement semantics" },
+    { "name": "versioning-strategy", "type": "markdown", "description": "Lifecycle states, transition rules, snapshot semantics" }
+  ],
+  "validation_rules": [
+    "All supported providers must have accurate export specifications",
+    "Validation rules must cover structural, semantic, and variable dimensions",
+    "Template categories must include required and recommended block lists",
+    "Quality standards must define clear scoring criteria with thresholds",
+    "Variable syntax must be unambiguous and support required/optional with defaults",
+    "Version lifecycle must define all state transitions and their preconditions"
+  ]
+}
