@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useEffect, useRef, type ReactNode, useCallback } from "react";
 import { Button } from "@/presentation/shared/atoms/Button";
 
 type ModalProps = {
@@ -9,7 +9,66 @@ type ModalProps = {
   footer?: ReactNode;
 };
 
+/**
+ * Focus trap: cycles focus between the first and last focusable elements.
+ */
+function useFocusTrap(containerRef: React.RefObject<HTMLDivElement | null>, active: boolean) {
+  useEffect(() => {
+    if (!active || !containerRef.current) return;
+
+    const container = containerRef.current;
+    const focusableSelector =
+      'a[href], button:not([disabled]), textarea:not([disabled]), input:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    const getFocusableElements = () =>
+      Array.from(container.querySelectorAll<HTMLElement>(focusableSelector));
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Tab") return;
+
+      const focusable = getFocusableElements();
+      if (focusable.length === 0) return;
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        }
+      } else {
+        if (document.activeElement === last) {
+          e.preventDefault();
+          first?.focus();
+        }
+      }
+    };
+
+    // Focus the first focusable element on open
+    requestAnimationFrame(() => {
+      const focusable = getFocusableElements();
+      if (focusable.length > 0) {
+        focusable[0]?.focus();
+      }
+    });
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => { document.removeEventListener("keydown", handleKeyDown); };
+  }, [active, containerRef]);
+}
+
 export function Modal({ open, onClose, title, children, footer }: ModalProps) {
+  const panelRef = useRef<HTMLDivElement | null>(null);
+  useFocusTrap(panelRef, open);
+
+    const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Escape") { onClose(); }
+    },
+    [onClose],
+  );
+
   if (!open) return null;
 
   return (
@@ -18,6 +77,7 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
       role="dialog"
       aria-modal="true"
       aria-label={title}
+      onKeyDown={handleKeyDown}
     >
       {/* Backdrop */}
       <div
@@ -26,7 +86,10 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
         aria-hidden="true"
       />
       {/* Panel */}
-      <div className="relative z-10 mx-4 w-full max-w-lg animate-slide-up rounded-xl bg-white p-6 shadow-xl dark:bg-surface-900">
+      <div
+        ref={panelRef}
+        className="relative z-10 mx-4 w-full max-w-lg animate-slide-up rounded-xl bg-white p-6 shadow-xl dark:bg-surface-900"
+      >
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-surface-900 dark:text-surface-100">
             {title}
