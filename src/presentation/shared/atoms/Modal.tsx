@@ -7,6 +7,7 @@ type ModalProps = {
   title: string;
   children: ReactNode;
   footer?: ReactNode;
+  size?: "sm" | "md" | "lg";
 };
 
 /**
@@ -58,7 +59,13 @@ function useFocusTrap(containerRef: React.RefObject<HTMLDivElement | null>, acti
   }, [active, containerRef]);
 }
 
-export function Modal({ open, onClose, title, children, footer }: ModalProps) {
+const sizeClasses: Record<string, string> = {
+  sm: "max-w-md",
+  md: "max-w-lg",
+  lg: "max-w-2xl",
+};
+
+export function Modal({ open, onClose, title, children, footer, size = "md" }: ModalProps) {
   const panelRef = useRef<HTMLDivElement | null>(null);
   useFocusTrap(panelRef, open);
 
@@ -88,7 +95,7 @@ export function Modal({ open, onClose, title, children, footer }: ModalProps) {
       {/* Panel */}
       <div
         ref={panelRef}
-        className="relative z-10 mx-4 w-full max-w-lg animate-slide-up rounded-xl bg-white p-6 shadow-xl dark:bg-surface-900"
+        className={`relative z-10 mx-4 w-full ${String(sizeClasses[size] ?? sizeClasses.md)} animate-slide-up rounded-xl bg-white p-6 shadow-xl dark:bg-surface-900`}
       >
         <div className="mb-4 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-surface-900 dark:text-surface-100">

@@ -8,7 +8,6 @@ export type Toast = {
 };
 
 export type UIState = {
-  sidebarOpen: boolean;
   toasts: readonly Toast[];
   confirmDialog: {
     open: boolean;
@@ -20,8 +19,6 @@ export type UIState = {
 };
 
 export type UIActions = {
-  toggleSidebar: () => void;
-  setSidebarOpen: (open: boolean) => void;
   addToast: (toast: Omit<Toast, "id">) => void;
   dismissToast: (id: string) => void;
   showConfirm: (title: string, message: string, onConfirm: () => void) => void;
@@ -35,7 +32,6 @@ export type UIStore = UIState & UIActions;
 let toastCounter = 0;
 
 export const useUIStore = create<UIStore>()((set) => ({
-  sidebarOpen: true,
   toasts: [],
   confirmDialog: {
     open: false,
@@ -44,10 +40,6 @@ export const useUIStore = create<UIStore>()((set) => ({
     onConfirm: null,
   },
   activeModal: null,
-
-  toggleSidebar: () => { set((state) => ({ sidebarOpen: !state.sidebarOpen })); },
-
-  setSidebarOpen: (open) => { set({ sidebarOpen: open }); },
 
   addToast: (toast) => {
     const id = `toast-${String(++toastCounter)}-${String(Date.now())}`;
