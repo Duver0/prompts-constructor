@@ -13,6 +13,8 @@ import { BlockType as BlockTypeEnum } from "@/domain/types";
 import { createBlockContent } from "@/domain/value-objects/BlockContent";
 import { createBlock } from "@/domain/entities/Block";
 import { createBlockId, createTimestamp } from "@/domain/value-objects";
+import BlockGuidancePanel from "./BlockGuidancePanel";
+import PromptReview from "./PromptReview";
 
 const BLOCK_TYPE_LABELS: Record<BlockType, string> = {
   [BlockTypeEnum.Role]: "Role",
@@ -108,6 +110,8 @@ export default function PromptEditorPage() {
   const prompt = promptId ? getPromptById(promptId) : undefined;
 
   const [title, setTitle] = useState(prompt?.title ?? "");
+  const [guidanceCollapsed, setGuidanceCollapsed] = useState(false);
+  const [showReview, setShowReview] = useState(false);
 
   // Compute initial block texts — only set once on mount
   const [blockTexts, setBlockTexts] = useState<Record<string, string>>(() => {
@@ -183,6 +187,25 @@ export default function PromptEditorPage() {
     [prompt, promptId, updatePromptAction, setDirty],
   );
 
+  // Derive active block type for guidance
+  const activeBlock = prompt?.blocks.find((b) => b.id === activeBlockId) ?? null;
+  const activeBlockType = activeBlock?.type ?? null;
+  const activeBlockText = activeBlock ? (blockTexts[activeBlock.id] ?? "") : "";
+
+  // Build review data from current blocks
+  const reviewBlocks = prompt
+    ? prompt.blocks.map((b) => ({
+        type: b.type,
+        text: blockTexts[b.id] ?? "",
+      }))
+    : [];
+
+  const handleReview = useCallback(() => {
+    // Save before reviewing
+    if (dirty) handleSave();
+    setShowReview(true);
+  }, [dirty, handleSave]);
+
   if (!prompt) {
     return (
       <div className="container-main py-6">
@@ -223,6 +246,12 @@ export default function PromptEditorPage() {
           <Button variant="secondary" onClick={() => { void navigate(`/versions/${String(promptId ?? "")}`); }}>
             Versions
           </Button>
+          <Button
+            variant="secondary"
+            onClick={handleReview}
+          >
+            Review
+          </Button>
           <Button variant="secondary" onClick={() => { void navigate(`/export/${String(promptId ?? "")}`); }}>
             Export
           </Button>
@@ -232,8 +261,9 @@ export default function PromptEditorPage() {
         </div>
       </div>
 
-      {/* Blocks */}
+      {/* Editor Body */}
       <div className="flex gap-6">
+        {/* Blocks Column */}
         <div className="flex-1 space-y-4">
           {prompt.blocks.length === 0 ? (
             <EmptyState
@@ -258,26 +288,48 @@ export default function PromptEditorPage() {
           )}
         </div>
 
-        {/* Sidebar - Add Block */}
-        <div className="w-56 shrink-0">
-          <div className="sticky top-6 rounded-lg border border-surface-200 bg-white p-4 dark:border-surface-700 dark:bg-surface-900">
-            <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-surface-500">
-              Add Block
-            </h3>
-            <div className="flex flex-col gap-1.5">
-              {Object.values(BlockTypeEnum).map((type) => (
-                <button
-                  key={type}
-                  onClick={() => { handleAddBlock(type); }}
-                  className="rounded-md px-3 py-2 text-left text-sm text-surface-700 transition-colors hover:bg-surface-100 dark:text-surface-300 dark:hover:bg-surface-800"
-                >
-                  + {BLOCK_TYPE_LABELS[type]}
-                </button>
-              ))}
+        {/* Right Panel: Add Block + Guidance */}
+        <div className="w-64 shrink-0">
+          <div className="sticky top-6 space-y-4">
+            {/* Add Block Card */}
+            <div className="rounded-lg border border-surface-200 bg-white p-4 dark:border-surface-700 dark:bg-surface-900">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-surface-500">
+                Add Block
+              </h3>
+              <div className="mt-2 flex flex-col gap-1">
+                {Object.values(BlockTypeEnum).map((type) => (
+                  <button
+                    key={type}
+                    onClick={() => { handleAddBlock(type); }}
+                    className="flex items-center gap-2 rounded-md px-3 py-1.5 text-left text-sm text-surface-700 transition-colors hover:bg-surface-100 dark:text-surface-300 dark:hover:bg-surface-800"
+                  >
+                    <span
+                      className={`inline-block h-2 w-2 rounded-full ${BLOCK_TYPE_COLORS[type].replace("border-l-", "bg-")}`}
+                      aria-hidden="true"
+                    />
+                    {BLOCK_TYPE_LABELS[type]}
+                  </button>
+                ))}
+              </div>
             </div>
+
+            {/* Guidance Panel */}
+            <BlockGuidancePanel
+              blockType={activeBlockType}
+              blockText={activeBlockText}
+              collapsed={guidanceCollapsed}
+              onToggleCollapse={() => { setGuidanceCollapsed((p) => !p); }}
+            />
           </div>
         </div>
       </div>
+
+      {/* Prompt Review Modal */}
+      <PromptReview
+        open={showReview}
+        onClose={() => { setShowReview(false); }}
+        blocks={reviewBlocks}
+      />
     </div>
   );
 }
