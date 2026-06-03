@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { usePromptStore } from "@/presentation/stores/usePromptStore";
 import { useEditorStore } from "@/presentation/stores/useEditorStore";
 import { useUIStore } from "@/presentation/stores/useUIStore";
+import { useSlideIn } from "@/presentation/hooks/useAnimation";
 import { Button } from "@/presentation/shared/atoms/Button";
 import { Input } from "@/presentation/shared/atoms/Input";
 import { Badge } from "@/presentation/shared/atoms/Badge";
@@ -34,6 +35,67 @@ const BLOCK_TYPE_COLORS: Record<BlockType, string> = {
   [BlockTypeEnum.Variables]: "border-l-cyan-500",
   [BlockTypeEnum.Notes]: "border-l-surface-400",
 };
+
+/* ── BlockCard component with slide-in animation ── */
+
+interface BlockCardProps {
+  blockType: BlockType;
+  isActive: boolean;
+  text: string;
+  onSelect: () => void;
+  onTextChange: (text: string) => void;
+  onRemove: () => void;
+}
+
+function BlockCard({
+  blockType,
+  isActive,
+  text,
+  onSelect,
+  onTextChange,
+  onRemove,
+}: BlockCardProps) {
+  const animRef = useSlideIn<HTMLDivElement>();
+
+  return (
+    <div
+      ref={animRef}
+      className={`rounded-lg border border-surface-200 bg-white dark:border-surface-700 dark:bg-surface-900 border-l-4 ${BLOCK_TYPE_COLORS[blockType]} ${isActive ? "ring-2 ring-primary-500" : ""}`}
+      onClick={onSelect}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => { if (e.key === "Enter") onSelect(); }}
+      aria-label={`${BLOCK_TYPE_LABELS[blockType]} block`}
+    >
+      <div className="flex items-center justify-between border-b border-surface-100 px-4 py-2 dark:border-surface-700">
+        <span className="text-xs font-semibold uppercase tracking-wider text-surface-500">
+          {BLOCK_TYPE_LABELS[blockType]}
+        </span>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onRemove();
+          }}
+          className="text-surface-400 hover:text-error transition-colors"
+          aria-label={`Remove ${BLOCK_TYPE_LABELS[blockType]} block`}
+        >
+          <svg className="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
+          </svg>
+        </button>
+      </div>
+      <div className="p-4">
+        <textarea
+          value={text}
+          onChange={(e) => { onTextChange(e.target.value); }}
+          className="min-h-[100px] w-full resize-y border-0 bg-transparent p-0 text-sm text-surface-900 placeholder-surface-400 focus:outline-none dark:text-surface-100 dark:placeholder-surface-500"
+          placeholder={`Enter ${BLOCK_TYPE_LABELS[blockType].toLowerCase()} content...`}
+          aria-label={`${BLOCK_TYPE_LABELS[blockType]} content`}
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function PromptEditorPage() {
   const { id } = useParams<{ id: string }>();
@@ -182,42 +244,15 @@ export default function PromptEditorPage() {
             prompt.blocks.map((block) => {
               const blockType = block.type;
               return (
-                <div
+                <BlockCard
                   key={block.id}
-                  className={`rounded-lg border border-surface-200 bg-white dark:border-surface-700 dark:bg-surface-900 border-l-4 ${BLOCK_TYPE_COLORS[blockType]} ${activeBlockId === block.id ? "ring-2 ring-primary-500" : ""}`}
-                  onClick={() => { setActiveBlock(block.id); }}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => { if (e.key === "Enter") setActiveBlock(block.id); }}
-                  aria-label={`${BLOCK_TYPE_LABELS[blockType]} block`}
-                >
-                  <div className="flex items-center justify-between border-b border-surface-100 px-4 py-2 dark:border-surface-700">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-surface-500">
-                      {BLOCK_TYPE_LABELS[blockType]}
-                    </span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleRemoveBlock(block.id);
-                      }}
-                      className="text-surface-400 hover:text-error transition-colors"
-                      aria-label={`Remove ${BLOCK_TYPE_LABELS[blockType]} block`}
-                    >
-                      <svg className="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                        <path d="M6.28 5.22a.75.75 0 00-1.06 1.06L8.94 10l-3.72 3.72a.75.75 0 101.06 1.06L10 11.06l3.72 3.72a.75.75 0 101.06-1.06L11.06 10l3.72-3.72a.75.75 0 00-1.06-1.06L10 8.94 6.28 5.22z" />
-                      </svg>
-                    </button>
-                  </div>
-                  <div className="p-4">
-                    <textarea
-                      value={blockTexts[block.id] ?? ""}
-                      onChange={(e) => { handleBlockTextChange(block.id, e.target.value); }}
-                      className="min-h-[100px] w-full resize-y border-0 bg-transparent p-0 text-sm text-surface-900 placeholder-surface-400 focus:outline-none dark:text-surface-100 dark:placeholder-surface-500"
-                      placeholder={`Enter ${BLOCK_TYPE_LABELS[blockType].toLowerCase()} content...`}
-                      aria-label={`${BLOCK_TYPE_LABELS[blockType]} content`}
-                    />
-                  </div>
-                </div>
+                  blockType={blockType}
+                  isActive={activeBlockId === block.id}
+                  text={blockTexts[block.id] ?? ""}
+                  onSelect={() => { setActiveBlock(block.id); }}
+                  onTextChange={(text) => { handleBlockTextChange(block.id, text); }}
+                  onRemove={() => { handleRemoveBlock(block.id); }}
+                />
               );
             })
           )}

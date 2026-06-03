@@ -1,7 +1,10 @@
+import { useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useClickOutside } from "@/presentation/hooks/useClickOutside";
 
 interface SidebarProps {
   isOpen: boolean;
+  onClose: () => void;
 }
 
 const navItems = [
@@ -10,11 +13,15 @@ const navItems = [
   { to: "/settings", label: "Settings", icon: "⚙️" },
 ];
 
-export default function Sidebar({ isOpen }: SidebarProps) {
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const location = useLocation();
+  const sidebarRef = useRef<HTMLElement>(null);
+
+  useClickOutside(sidebarRef, onClose, isOpen);
 
   return (
     <aside
+      ref={sidebarRef}
       className={`border-r border-surface-200 bg-white transition-all duration-200 dark:border-surface-700 dark:bg-surface-900 ${
         isOpen ? "w-60" : "w-0 overflow-hidden"
       }`}
