@@ -41,3 +41,15 @@ test-results/
 
 # TypeScript
 *.tsbuildinfo
+
+# Bun
+bun.lock
+
+# Vite
+.vite/
+
+# Vitest
+html/
+
+# ESLint
+.eslintcache
