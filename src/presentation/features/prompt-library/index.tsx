@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { usePromptStore } from "@/presentation/stores/usePromptStore";
 import { useUIStore } from "@/presentation/stores/useUIStore";
+import { useDebounce } from "@/presentation/hooks/useDebounce";
 import { Button } from "@/presentation/shared/atoms/Button";
 import { Input } from "@/presentation/shared/atoms/Input";
 import { Badge } from "@/presentation/shared/atoms/Badge";
@@ -24,6 +25,13 @@ export default function PromptLibraryPage() {
 
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [newTitle, setNewTitle] = useState("");
+  const [searchInput, setSearchInput] = useState(searchQuery);
+  const debouncedSearch = useDebounce(searchInput, 250);
+
+  // Sync debounced search to store
+  useEffect(() => {
+    setSearchQuery(debouncedSearch);
+  }, [debouncedSearch, setSearchQuery]);
 
   useEffect(() => {
     loadPrompts();
@@ -73,8 +81,8 @@ export default function PromptLibraryPage() {
       <div className="mb-6 max-w-md">
         <Input
           placeholder="Search prompts..."
-          value={searchQuery}
-          onChange={(e) => { setSearchQuery(e.target.value); }}
+          value={searchInput}
+          onChange={(e) => { setSearchInput(e.target.value); }}
           aria-label="Search prompts"
         />
       </div>
