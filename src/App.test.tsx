@@ -30,7 +30,7 @@ describe("App", () => {
       const headings = screen.getAllByText("Prompt Library");
       expect(headings.length).toBeGreaterThan(0);
     });
-    expect(screen.getByText("+ New Prompt")).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /new prompt/i })).toBeInTheDocument();
   });
 
   it("should show the empty state message", async () => {

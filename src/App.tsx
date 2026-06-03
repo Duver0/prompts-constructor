@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { lazy, Suspense } from "react";
 import AppLayout from "@/presentation/layouts/AppLayout";
+import { ToastContainer } from "@/presentation/shared/molecules/ToastContainer";
+import { ConfirmDialog } from "@/presentation/shared/molecules/ConfirmDialog";
 
 const PromptLibrary = lazy(() => import("@/presentation/features/prompt-library"));
 const PromptEditor = lazy(() => import("@/presentation/features/prompt-editor"));
@@ -37,6 +39,8 @@ export default function App() {
           </Route>
         </Routes>
       </Suspense>
+      <ToastContainer />
+      <ConfirmDialog />
     </BrowserRouter>
   );
 }

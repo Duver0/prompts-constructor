@@ -5,6 +5,7 @@ import type { VersionNumber } from "@/domain/value-objects/VersionNumber";
 export type PromptTemplate = Readonly<{
   id: TemplateId;
   name: string;
+  description: string;
   category: TemplateCategory;
   blocks: readonly BlockTemplate[];
   variables: readonly Variable[];
@@ -22,6 +23,7 @@ export type TemplateUpdateParams = Partial<{
 export function createPromptTemplate(params: {
   id: TemplateId;
   name: string;
+  description?: string;
   category: TemplateCategory;
   version: VersionNumber;
   createdAt: Timestamp;
@@ -29,6 +31,7 @@ export function createPromptTemplate(params: {
   return {
     id: params.id,
     name: params.name,
+    description: params.description ?? "",
     category: params.category,
     blocks: [],
     variables: [],
