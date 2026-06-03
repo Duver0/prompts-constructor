@@ -1,0 +1,27 @@
+{
+  "agents": {
+    "orchestrator": { "path": ".opencode/agents/orchestrator.md" },
+    "product-analyst": { "path": ".opencode/agents/product-analyst.md" },
+    "prompt-engineer": { "path": ".opencode/agents/prompt-engineer.md" },
+    "domain-modeler": { "path": ".opencode/agents/domain-modeler.md" },
+    "ux-ui-architect": { "path": ".opencode/agents/ux-ui-architect.md" },
+    "frontend-architect": { "path": ".opencode/agents/frontend-architect.md" },
+    "testing-architect": { "path": ".opencode/agents/testing-architect.md" },
+    "devops": { "path": ".opencode/agents/devops.md" },
+    "code-reviewer": { "path": ".opencode/agents/code-reviewer.md" },
+    "architecture-guardian": { "path": ".opencode/agents/architecture-guardian.md" },
+    "documentation": { "path": ".opencode/agents/documentation.md" }
+  },
+  "workflows": {
+    "new-feature": ".opencode/workflows/new-feature.md",
+    "bug-fix": ".opencode/workflows/bug-fix.md",
+    "refactor": ".opencode/workflows/refactor.md",
+    "architecture-review": ".opencode/workflows/architecture-review.md",
+    "release": ".opencode/workflows/release.md"
+  },
+  "standards": {
+    "coding": ".opencode/standards/coding-standards.md",
+    "testing": ".opencode/standards/testing-standards.md",
+    "definition-of-done": ".opencode/standards/definition-of-done.md"
+  }
+}
