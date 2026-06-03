@@ -1,0 +1,26 @@
+{
+  "agent": "Orchestrator",
+  "version": "1.0.0",
+  "id": "agent.orchestrator.v1",
+  "invocation": {
+    "schema": "task-based",
+    "trigger": ["project-init", "spec-change", "conflict", "stage-gate", "user-request"],
+    "required_context": ["project-state", "agent-registry", "standards"]
+  },
+  "inputs": [
+    { "name": "specification", "type": "markdown", "description": "High-level project requirements" },
+    { "name": "user-feedback", "type": "text", "description": "User requests and feedback" },
+    { "name": "agent-outputs", "type": "artifact[]", "description": "Deliverables from specialist agents" }
+  ],
+  "outputs": [
+    { "name": "execution-plan", "type": "markdown", "description": "Structured plan with milestones and tasks" },
+    { "name": "delegation-tasks", "type": "task[]", "description": "Dispatched tasks to specialist agents" },
+    { "name": "status-report", "type": "markdown", "description": "Project status summary" },
+    { "name": "aggregated-deliverable", "type": "artifact", "description": "Final integrated output" }
+  ],
+  "validation_rules": [
+    "All specialist outputs must be validated against contracts",
+    "Architectural integrity must be verified after each integration",
+    "Standards compliance must be enforced at every stage gate"
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "agent": "Domain Modeler",
+  "version": "1.0.0",
+  "id": "agent.domain-modeler.v1",
+  "invocation": {
+    "schema": "domain-design",
+    "trigger": ["new-domain-entity", "business-rule-change", "domain-refinement"],
+    "required_context": ["user-stories", "constraints"]
+  },
+  "inputs": [
+    { "name": "user-stories", "type": "story[]", "description": "For identifying domain concepts" },
+    { "name": "functional-decomposition", "type": "tree", "description": "For understanding required operations" },
+    { "name": "existing-model", "type": "artifact", "description": "Previous domain model for extension" }
+  ],
+  "outputs": [
+    { "name": "entities", "type": "ts[]", "description": "Domain entity classes/interfaces" },
+    { "name": "value-objects", "type": "ts[]", "description": "Immutable value type definitions" },
+    { "name": "aggregates", "type": "ts[]", "description": "Aggregate root definitions" },
+    { "name": "domain-services", "type": "ts[]", "description": "Domain service interfaces" },
+    { "name": "events", "type": "ts[]", "description": "Domain event type definitions" },
+    { "name": "business-rules", "type": "ts[]", "description": "Pure rule validation functions" },
+    { "name": "repository-interfaces", "type": "ts[]", "description": "Data access abstractions" }
+  ],
+  "validation_rules": [
+    "Zero dependencies on React, Zustand, or any framework",
+    "All value objects must be immutable",
+    "Entities must have identity equality",
+    "Business rules must be pure functions with no side effects",
+    "Repository interfaces must not leak infrastructure concerns"
+  ]
+}

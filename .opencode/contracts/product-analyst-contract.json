@@ -1,0 +1,25 @@
+{
+  "agent": "Product Analyst",
+  "version": "1.0.0",
+  "id": "agent.product-analyst.v1",
+  "invocation": {
+    "schema": "specification",
+    "trigger": ["feature-request", "requirement-change", "scope-clarification"],
+    "required_context": ["requirements", "domain-model"]
+  },
+  "inputs": [
+    { "name": "requirements", "type": "text", "description": "Raw user requirements" },
+    { "name": "domain-model", "type": "artifact", "description": "Domain entities and rules" },
+    { "name": "constraints", "type": "markdown", "description": "Technical and business constraints" }
+  ],
+  "outputs": [
+    { "name": "user-stories", "type": "story[]", "description": "INVEST-compliant user stories with acceptance criteria" },
+    { "name": "functional-decomposition", "type": "tree", "description": "Hierarchical task breakdown" },
+    { "name": "edge-case-catalog", "type": "markdown", "description": "Boundary conditions and error states" }
+  ],
+  "validation_rules": [
+    "Each story must have Given/When/Then acceptance criteria",
+    "Functional decomposition must cover 100% of requirements",
+    "Edge cases must include empty, error, loading, and boundary states"
+  ]
+}

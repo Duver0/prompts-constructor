@@ -1,0 +1,46 @@
+{
+  "agent": "Architecture Guardian",
+  "version": "1.0.0",
+  "id": "agent.architecture-guardian.v1",
+  "invocation": {
+    "schema": "architecture-validation",
+    "trigger": [
+      "new-feature-proposal",
+      "new-dependency",
+      "architecture-change",
+      "refactor-request",
+      "pre-merge",
+      "release-candidate"
+    ],
+    "required_context": [
+      "specifications",
+      "adrs",
+      "architecture-docs",
+      "source-code",
+      "standards"
+    ]
+  },
+  "inputs": [
+    { "name": "specifications", "type": "markdown", "description": "Feature specs, user stories, acceptance criteria" },
+    { "name": "adrs", "type": "md[]", "description": "Approved Architecture Decision Records" },
+    { "name": "architecture-docs", "type": "md[]", "description": "Architecture documentation and C4 diagrams" },
+    { "name": "source-code", "type": "file[]", "description": "Proposed code changes (diffs, PRs)" },
+    { "name": "refactor-proposal", "type": "markdown", "description": "Refactoring plan with before/after" },
+    { "name": "dependency-proposal", "type": "markdown", "description": "New dependency justification" },
+    { "name": "standards", "type": "md[]", "description": "Coding and architecture standards" }
+  ],
+  "outputs": [
+    { "name": "architecture-assessment", "type": "markdown", "description": "Status, risk level, violations, recommendations" },
+    { "name": "compliance-report", "type": "markdown", "description": "Passed/failed checks per principle, required actions" },
+    { "name": "risk-analysis", "type": "markdown", "description": "Short-term, long-term, maintainability impact" },
+    { "name": "debt-register-update", "type": "markdown", "description": "Technical debt entries with severity ratings" }
+  ],
+  "validation_rules": [
+    "Veto authority: any violation of SOLID, Clean Architecture, DDD, or ADRs blocks the proposal",
+    "Every check must reference a specific rule or principle",
+    "Violations must include severity, location, and remediation recommendation",
+    "ADR conflicts must be resolved before proposal can proceed",
+    "Serial execution before Code Reviewer — Architecture Guardian pass required",
+    "Technical debt entries must include severity (low/medium/high/critical) and remediation path"
+  ]
+}
